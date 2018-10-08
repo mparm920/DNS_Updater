@@ -1,10 +1,10 @@
 import requests
 import os
-import subprocess
+import json
 
 URL = "https://api.digitalocean.com/v2/domains/parmserv.com/records"
 API_Key = os.environ.get("DO_API_KEY") 
-DOMAIN_RECORD = "home"
+DOMAIN_RECORD = "ipfire"
 
 headers = {"Content-Type":"application/json", "Authorization":"Bearer " + API_Key}
 
@@ -12,8 +12,7 @@ def main():
     print(check_IP())
 
 def check_IP():
-    newIP = subprocess.call("curl ifconfig.me", shell=True, stdout=subprocess.PIPE)
-    newIP.wait()
+    newIP = json.loads(requests.get("https://api.ipify.org?format=json").text)
     with open('ip.txt', 'w') as f:
         f.write(str(newIP))
     return newIP
