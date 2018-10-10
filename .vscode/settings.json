@@ -1,3 +1,5 @@
 {
-    "python.pythonPath": "/home/mparm920/.local/share/virtualenvs/DNS_Updater-1HlKhnbJ/bin/python"
+    "python.pythonPath": "/home/mparm920/.virtualenvs/dns_updater-33kbbRIe/bin/python",
+    "python.venvPath": "~/.virtualenvs",
+    "python.linting.pylintPath": "~/.virtualenvs/dns_updater-33kbbRIe/bin/pylint"
 }
