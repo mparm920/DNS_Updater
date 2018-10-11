@@ -1,5 +1,4 @@
 import os
-import json
 import requests
 
 URL = "https://api.digitalocean.com/v2/domains/parmserv.com/records"
@@ -10,20 +9,37 @@ HEADERS = {"Content-Type":"application/json", "Authorization":"Bearer " + API_KE
 
 def main():
     print(check_ip())
-    print(get_home_domain())
 
 def check_ip():
-    new_ip = json.loads(requests.get("https://api.ipify.org?format=text").text)
+    new_ip = get_new_ip().split('.')
+    current_ip = get_current_ip().split('.')
+    if new_ip != current_ip:
+        save_new_ip(new_ip)
+        domain = get_home_domain()
+        if domain:
+            update_home_domain(domain, new_ip)
+        else:
+            pass
+
+def get_new_ip():
+    return requests.get("https://api.ipify.org?format=text").text
+
+def get_current_ip():
+    ip = ""
+    with open('ip.txt', 'r') as file_name:
+        ip = file_name.readline()
+    return ip
+
+def save_new_ip(ip):
     with open('ip.txt', 'w') as file_name:
-        file_name.write(str(new_ip))
-    return new_ip
+        file_name.write(ip)
 
 def get_home_domain():
     res = requests.get(URL, headers=HEADERS).json()
     for obj in res['domain_records']:
         if obj['name'] == DOMAIN_RECORD:
             return obj
-    return "Not Found"
+    return None
 
 def update_home_domain(obj, new_ip):
     update_url = URL + "/" + obj["id"]
